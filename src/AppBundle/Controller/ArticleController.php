@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Article;
 use AppBundle\Exception\ResourceValidationException;
+use AppBundle\Form\ArticleType;
 use AppBundle\Representation\Articles;
 use AppBundle\Validation\ValidationListMessage;
 use Doctrine\ORM\EntityNotFoundException;
@@ -11,6 +12,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,6 +68,7 @@ class ArticleController extends FOSRestController
      */
     public function showAction(Article $article)
     {
+
         return $article;
     }
 
@@ -103,22 +106,25 @@ class ArticleController extends FOSRestController
      * @ParamConverter("article", converter="fos_rest.request_body")
      * @Rest\View(StatusCode = 202)
      */
-    public function updateAction(Article $article, ConstraintViolationList $violations)
+    public function updateAction($id, Article $article, ConstraintViolationList $violations)
     {
-     if (count($violations)) {
+        $em = $this->getDoctrine()->getManager();
 
+        //fecth article in BDD
+        $updateArticle = $em->getRepository('AppBundle:Article')->find($id);
+
+        //If no article throw error with 404 status
+        if (null === $updateArticle){
+            throw new EntityNotFoundException('Id not found or invalid !');
+        }
+        //If form is not valid return form errors and throw 400 status
+        elseif (count($violations)) {
             $message = ValidationListMessage::getViolationDetails($violations);
             throw new ResourceValidationException($message);
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $updateArticle = $em->getRepository('AppBundle:Article')->find($article->getId());
-        if (null === $updateArticle){
-            throw new EntityNotFoundException('no entity !');
-        }
-        //$em->persist($updateArticle);
-        //$em->flush();
-
+        $em->persist($article);
+        $em->flush();
         return $article;
     }
 }

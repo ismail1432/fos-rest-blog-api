@@ -85,5 +85,6 @@ fos_rest:
         enabled: true
         codes:
            { AppBundle\Exception\ResourceValidationException: 400, \Exception: 500 }
+          #{ AppBundle\Exception\EntityNotFoundException: 404, \Exception: 500 }
         messages:
            { AppBundle\Exception\ResourceValidationException: true }
