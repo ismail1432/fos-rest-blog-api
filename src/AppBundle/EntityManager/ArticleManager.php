@@ -45,4 +45,9 @@ class ArticleManager implements InterfaceEntityManager
         return;
     }
 
+    public function find($id)
+    {
+        return $this->manager->getRepository(Article::class)->find($id);
+    }
+
 }

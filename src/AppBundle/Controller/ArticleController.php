@@ -104,10 +104,8 @@ class ArticleController extends FOSRestController
      */
     public function updateAction($id, Article $article, ConstraintViolationList $violations)
     {
-        $em = $this->getDoctrine()->getManager();
-
         //fecth article in BDD
-        $oldArticle = $em->getRepository('AppBundle:Article')->find($id);
+        $oldArticle = $this->container->get('manager.article')->find($id);
 
         //If no article throw error with 404 status
         if (null === $oldArticle){
