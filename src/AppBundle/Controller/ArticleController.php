@@ -68,7 +68,6 @@ class ArticleController extends FOSRestController
      */
     public function showAction(Article $article)
     {
-
         return $article;
     }
 
@@ -88,10 +87,7 @@ class ArticleController extends FOSRestController
             throw new ResourceValidationException($message);
         }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($article);
-        $em->flush();
+        $this->container->get('manager.article')->create($article);
 
         return $article;
     }
@@ -111,10 +107,10 @@ class ArticleController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
 
         //fecth article in BDD
-        $updateArticle = $em->getRepository('AppBundle:Article')->find($id);
+        $oldArticle = $em->getRepository('AppBundle:Article')->find($id);
 
         //If no article throw error with 404 status
-        if (null === $updateArticle){
+        if (null === $oldArticle){
             throw new EntityNotFoundException('Id not found or invalid !');
         }
         //If form is not valid return form errors and throw 400 status
@@ -123,8 +119,7 @@ class ArticleController extends FOSRestController
             throw new ResourceValidationException($message);
         }
 
-        $em->persist($article);
-        $em->flush();
+        $this->container->get('manager.article')->update($article, $oldArticle);
         return $article;
     }
 }
