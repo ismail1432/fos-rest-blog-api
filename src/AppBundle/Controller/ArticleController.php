@@ -100,7 +100,7 @@ class ArticleController extends FOSRestController
      *     requirements = {"id"="\d+"}
      * )
      * @ParamConverter("article", converter="fos_rest.request_body")
-     * @Rest\View(StatusCode = 202)
+     * @Rest\View(StatusCode = 204)
      */
     public function updateAction($id, Article $article, ConstraintViolationList $violations)
     {
@@ -119,5 +119,23 @@ class ArticleController extends FOSRestController
 
         $this->container->get('manager.article')->update($article, $oldArticle);
         return $article;
+    }
+
+    /**
+     * @Rest\Delete(
+     *     path = "/articles/{id}",
+     *     name = "app_article_delete",
+     *     requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function deleteAction($id)
+    {
+
+        $result = $this->container->get('manager.article')->delete($id);
+        if(false == $result){
+            throw new EntityNotFoundException('Id not found or invalid !');
+        }
+        return;
     }
 }

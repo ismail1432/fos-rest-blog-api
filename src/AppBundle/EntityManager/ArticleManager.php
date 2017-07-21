@@ -50,4 +50,16 @@ class ArticleManager implements InterfaceEntityManager
         return $this->manager->getRepository(Article::class)->find($id);
     }
 
+    public function delete($id)
+    {
+        $entity = $this->find($id);
+        if(null == $entity){
+            return false;
+        }
+        $this->manager->remove($entity);
+        $this->manager->flush();
+
+        return true;
+    }
+
 }

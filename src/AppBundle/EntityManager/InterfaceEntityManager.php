@@ -14,4 +14,5 @@ interface InterfaceEntityManager
     public function update($updateData, $oldData);
     public function create($entity);
     public function find($id);
+    public function delete($id);
 }
