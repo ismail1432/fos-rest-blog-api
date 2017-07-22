@@ -20,8 +20,11 @@ services:
         tags:
             - { name: app.normalizer }
 
-    manager.article:
-        class: AppBundle\EntityManager\ArticleManager
+    manager.abstract_own_entity_manager:
+        class: AppBundle\EntityManager\AbstractEntityOwnManager
         arguments:
             - '@doctrine.orm.entity_manager'
 
+    manager.article:
+        class: AppBundle\EntityManager\ArticleManager
+        parent:  manager.abstract_own_entity_manager
