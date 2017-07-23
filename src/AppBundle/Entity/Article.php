@@ -41,7 +41,7 @@ class Article
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Author", cascade={"all"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Author", cascade={"persist"}, fetch="EAGER")
      */
     private $author;
 

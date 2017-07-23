@@ -38,7 +38,7 @@ class Author
     private $biography;
 
     /**
-     * @ORM\OneToMany(targetEntity="Article", mappedBy="author", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Article", mappedBy="author", cascade={"persist", "remove"})
      */
     private $articles;
 
